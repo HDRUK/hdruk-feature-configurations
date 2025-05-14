@@ -13,6 +13,7 @@ jobs:
       PREPROD_API_URL: ${{ vars.PREPROD_API_URL }}
       PROD_API_URL: ${{ vars.PROD_API_URL }}
       API_TOKEN: ${{ secrets.TOKEN }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -22,10 +23,13 @@ jobs:
       - name: Get list of changed files
         id: changes
         run: |
-          echo "CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)" >> $GITHUB_ENV
+          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
+          git diff --name-only HEAD^ HEAD >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Send API POST requests for changed files
         run: |
+          echo "Changed files:"
           echo "$CHANGED_FILES"
 
           post_if_changed() {
