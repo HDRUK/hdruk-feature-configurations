@@ -9,9 +9,9 @@ jobs:
   send-api-calls:
     runs-on: ubuntu-latest
     env:
-      DEV_API_URL: ${{ env.DEV_API_URL }}
-      PREPROD_API_URL: ${{ env.PREPROD_API_URL }}
-      PROD_API_URL: ${{ env.PROD_API_URL }}
+      DEV_API_URL: ${{ vars.DEV_API_URL }}
+      PREPROD_API_URL: ${{ vars.PREPROD_API_URL }}
+      PROD_API_URL: ${{ vars.PROD_API_URL }}
       API_TOKEN: ${{ secrets.TOKEN }}
     steps:
       - name: Checkout repo
