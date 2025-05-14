@@ -34,11 +34,9 @@ jobs:
             file_path="$folder/features.json"
 
             if echo "$CHANGED_FILES" | grep -q "^$file_path$"; then
-              echo "📤 Sending $file_path to $url"
+              echo "📤 Triggering POST to $url (no request body)"
               curl -X POST "$url" \
-                -H "Content-Type: application/json" \
-                -H "Authorization: Bearer $API_TOKEN" \
-                --data-binary "@$file_path"
+                -H "Authorization: Bearer $API_TOKEN"
             else
               echo "✅ No change in $file_path"
             fi
