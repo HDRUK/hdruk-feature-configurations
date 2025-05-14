@@ -1,7 +1,5 @@
 {
-    "features":{
-        "SDEConciergeServiceEnquiry": {
-            "enabled": false
-        }
+    "SDEConciergeServiceEnquiry": {
+        "enabled": false
     }
 }
