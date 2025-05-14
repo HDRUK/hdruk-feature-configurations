@@ -23,9 +23,16 @@ jobs:
       - name: Get list of changed files
         id: changes
         run: |
-          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
-          git diff --name-only HEAD^ HEAD >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "Changed files between HEAD and HEAD^:"
+          git diff --name-only HEAD^ HEAD
+      
+          CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+          echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
+
+      - name: Debug print CHANGED_FILES
+        run: |
+          echo "Files changed:"
+          echo "$CHANGED_FILES"
 
       - name: Send API POST requests for changed files
         run: |
