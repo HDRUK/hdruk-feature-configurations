@@ -3,7 +3,7 @@ name: Trigger API on Folder Change
 on:
   push:
     branches:
-      - main
+      - GAT-6927-2
 
 jobs:
   send-api-calls:
