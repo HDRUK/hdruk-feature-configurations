@@ -4,5 +4,8 @@
     },
     "tester": {
         "enabled": true
+    },
+    "testertwo": {
+        "enabled": true
     }
 }
