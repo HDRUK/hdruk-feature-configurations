@@ -1,0 +1,47 @@
+name: Trigger API on Folder Change
+
+on:
+  push:
+    branches:
+      - feat/GAT-6927-2
+
+jobs:
+  send-api-calls:
+    runs-on: ubuntu-latest
+    env:
+      DEV_API_URL: ${{ vars.DEV_API_URL }}
+      PREPROD_API_URL: ${{ vars.PREPROD_API_URL }}
+      PROD_API_URL: ${{ vars.PROD_API_URL }}
+      API_TOKEN: ${{ secrets.TOKEN }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Get list of changed files
+        id: changes
+        run: |
+          echo "CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)" >> $GITHUB_ENV
+
+      - name: Send API POST requests for changed files
+        run: |
+          echo "$CHANGED_FILES"
+
+          post_if_changed() {
+            folder=$1
+            url=$2
+            file_path="$folder/features.json"
+
+            if echo "$CHANGED_FILES" | grep -q "^$file_path$"; then
+              echo "📤 Triggering POST to $url (no request body)"
+              curl -X POST "$url" \
+                -H "Authorization: Bearer $API_TOKEN"
+            else
+              echo "✅ No change in $file_path"
+            fi
+          }
+
+          post_if_changed "dev" "$DEV_API_URL"
+          post_if_changed "preprod" "$PREPROD_API_URL"
+          post_if_changed "prod" "$PROD_API_URL"

@@ -27,8 +27,7 @@ Each folder includes a JSON configuration file for that specific environment. Th
 Below is an example of a feature configuration file:
 
 ```json
-{
-  "features": {
+ {
     "createDatasets": {
       "enabled": true
     },
@@ -50,4 +49,3 @@ Below is an example of a feature configuration file:
       }
     }
   }
-}
