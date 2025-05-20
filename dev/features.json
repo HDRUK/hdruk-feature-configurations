@@ -1,9 +1,6 @@
 {
     "SDEConciergeServiceEnquiry": {
         "enabled": false
-    },
-    "SDEConciergeServiceEnquirytwo": {
-        "enabled": false
     }
     
 }
