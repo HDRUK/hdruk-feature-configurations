@@ -1,5 +1,5 @@
 {
     "SDEConciergeServiceEnquiry": {
-        "enabled": false
+        "enabled": true
     }
 }
