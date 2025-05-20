@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
@@ -34,7 +34,7 @@ jobs:
 
       - name: "Set up Cloud SDK"
         id: setupsdk
-        uses: "google-github-actions/setup-gcloud@v1"
+        uses: "google-github-actions/setup-gcloud@v2"
         with:
           version: ">= 363.0.0"
 
