@@ -16,7 +16,6 @@ jobs:
       PREPROD_API_TOKEN: ${{ secrets.PREPROD_TOKEN }}
       PROD_API_TOKEN: ${{ secrets.PROD_TOKEN }}
       GCP_BUCKET: ${{ vars.GCP_BUCKET }}
-      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
 
     steps:
       - name: Checkout repo
@@ -24,12 +23,20 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      - name: Google Auth
+        id: auth
+        uses: "google-github-actions/auth@v2"
         with:
-          project_id: ${{ env.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+          token_format: "access_token"
+          project_id: "${{ secrets.PROJECT_ID }}"
+          workload_identity_provider: "${{ secrets.WIF_PROVIDER }}"
+          service_account: "${{ secrets.WIF_SERVICE_ACCOUNT }}"
+
+      - name: "Set up Cloud SDK"
+        id: setupsdk
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: ">= 363.0.0"
 
       - name: Get list of changed files
         run: |
@@ -44,7 +51,7 @@ jobs:
 
             if echo "$CHANGED_FILES" | grep -q "^$file_path$"; then
               echo "⬆️ Uploading $file_path to gs://${GCP_BUCKET}/$folder/"
-              gsutil cp "$file_path" "gs://${GCP_BUCKET}/$folder/"
+              gsutil -h x-goog-meta-github-sha:${{ github.sha }} cp "$file_path" "gs://${GCP_BUCKET}/$folder/"
             else
               echo "✅ No change in $file_path, skipping upload"
             fi
