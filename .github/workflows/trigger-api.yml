@@ -5,6 +5,10 @@ on:
     branches:
       - chore/gcpbucket
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy-and-trigger:
     runs-on: ubuntu-latest
