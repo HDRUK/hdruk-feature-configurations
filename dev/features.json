@@ -3,12 +3,12 @@
         "enabled": true
     },
     "sundayroast": {
-        "enabled": false
-    },
-    "cakes": {
         "enabled": true
     },
+    "cakes": {
+        "enabled": false
+    },
     "salad": {
-        "enabled" : false
+        "enabled" : true
     }
 }
