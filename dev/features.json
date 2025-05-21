@@ -3,7 +3,7 @@
         "enabled": false
     },
      "tester": {
-        "enabled": true
+        "enabled": false
     }
     
 }

@@ -60,7 +60,7 @@ jobs:
               echo "⬆️ Uploading $file_path to $destination"
 
              gcloud storage cp "$file_path" "$destination" \
-            --additional-headers=[x-goog-meta-github-sha:${{ github.sha }}] \
+            --additional-headers=x-goog-meta-github-sha=${{ github.sha }} \
             --predefined-acl=publicRead
 
               echo "🌐 Public URL: https://storage.googleapis.com/${GCP_BUCKET}/$folder/features.json"

@@ -3,6 +3,6 @@
         "enabled": true
     },
      "tester": {
-        "enabled": true
+        "enabled": false
     }
 }
