@@ -9,6 +9,9 @@
         "enabled": false
     },
     "salad": {
-        "enabled" : true
+        "enabled" : false
+    },
+    "pies": {
+        "enabled": true
     }
 }

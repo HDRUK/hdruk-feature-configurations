@@ -61,7 +61,8 @@ jobs:
 
              gcloud storage cp "$file_path" "$destination" \
             --additional-headers=x-goog-meta-github-sha=${{ github.sha }} \
-            --cache-control="no-cache, max-age=0", no-store \
+            --cache-control="no-cache, max-age=0" \
+            --custom-response-header 'Cache-Control: no-cache, max-age=0' \
             --predefined-acl=publicRead
 
               echo "🌐 Public URL: https://storage.googleapis.com/${GCP_BUCKET}/$folder/features.json"
