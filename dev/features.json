@@ -1,5 +1,8 @@
 {
     "SDEConciergeServiceEnquiry": {
         "enabled": true
+    },
+    "sundayroast": {
+        "enabled": true
     }
 }
