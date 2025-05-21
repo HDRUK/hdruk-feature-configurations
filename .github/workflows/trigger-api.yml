@@ -5,8 +5,12 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
-  send-api-calls:
+  deploy-and-trigger:
     runs-on: ubuntu-latest
     env:
       DEV_API_URL: ${{ vars.DEV_API_URL }}
@@ -15,32 +19,66 @@ jobs:
       DEV_API_TOKEN: ${{ secrets.DEV_TOKEN }}
       PREPROD_API_TOKEN: ${{ secrets.PREPROD_TOKEN }}
       PROD_API_TOKEN: ${{ secrets.PROD_TOKEN }}
+      GCP_BUCKET: ${{ vars.GCP_BUCKET }}
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
-      - name: Get list of changed files
-        id: changes
-        run: |
-          echo "Changed files between HEAD and HEAD^:"
-          git diff --name-only HEAD^ HEAD
-      
-          CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
-          echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
+      - name: Google Auth
+        id: auth
+        uses: "google-github-actions/auth@v2"
+        with:
+          token_format: "access_token"
+          project_id: "${{ secrets.PROJECT_ID }}"
+          workload_identity_provider: "${{ secrets.WIF_PROVIDER }}"
+          service_account: "${{ secrets.WIF_SERVICE_ACCOUNT }}"
 
-      - name: Debug print CHANGED_FILES
+      - name: "Set up Cloud SDK"
+        id: setupsdk
+        uses: "google-github-actions/setup-gcloud@v2"
+        with:
+          version: ">= 363.0.0"
+
+      - name: Get list of changed files
         run: |
-          echo "Files changed:"
-          echo "$CHANGED_FILES"
+          CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
+          echo "$CHANGED_FILES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Upload changed configs to GCS
+        run: |
+          upload_if_changed() {
+          folder=$1
+          file_path="$folder/features.json"
+          destination="gs://${GCP_BUCKET}/$folder/features.json"
+
+          if echo "$CHANGED_FILES" | grep -q "^$file_path$"; then
+              echo "⬆️ Uploading $file_path to $destination"
+
+             gcloud storage cp "$file_path" "$destination" \
+            --additional-headers=x-goog-meta-github-sha=${{ github.sha }} \
+            --cache-control="no-cache, max-age=0" \
+            --predefined-acl=publicRead
+
+              echo "🌐 Public URL: https://storage.googleapis.com/${GCP_BUCKET}/$folder/features.json"
+            else
+              echo "✅ No change in $file_path, skipping upload"
+            fi
+          }
+
+          upload_if_changed "dev"
+          upload_if_changed "preprod"
+          upload_if_changed "prod"
 
       - name: Send API POST requests for changed files
         run: |
           echo "Changed files:"
           echo "$CHANGED_FILES"
-
+          
           post_if_changed() {
             folder=$1
             url=$2
