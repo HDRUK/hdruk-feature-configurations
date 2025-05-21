@@ -3,7 +3,7 @@ name: Trigger API on Folder Change
 on:
   push:
     branches:
-      - chore/gcpbucket
+      - main
 
 permissions:
   id-token: write
@@ -74,26 +74,26 @@ jobs:
           upload_if_changed "preprod"
           upload_if_changed "prod"
 
-      # - name: Send API POST requests for changed files
-      #   run: |
-      #     echo "Changed files:"
-      #     echo "$CHANGED_FILES"
+      - name: Send API POST requests for changed files
+        run: |
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
           
-      #     post_if_changed() {
-      #       folder=$1
-      #       url=$2
-      #       token=$3
-      #       file_path="$folder/features.json"
+          post_if_changed() {
+            folder=$1
+            url=$2
+            token=$3
+            file_path="$folder/features.json"
 
-      #       if echo "$CHANGED_FILES" | grep -q "^$file_path$"; then
-      #         echo "📤 Triggering POST to $url (no request body)"
-      #         curl -X POST "$url" \
-      #           -H "Authorization: Bearer $token"
-      #       else
-      #         echo "✅ No change in $file_path"
-      #       fi
-      #     }
+            if echo "$CHANGED_FILES" | grep -q "^$file_path$"; then
+              echo "📤 Triggering POST to $url (no request body)"
+              curl -X POST "$url" \
+                -H "Authorization: Bearer $token"
+            else
+              echo "✅ No change in $file_path"
+            fi
+          }
 
-      #     post_if_changed "dev" "$DEV_API_URL" "DEV_API_TOKEN"
-      #     post_if_changed "preprod" "$PREPROD_API_URL" "PREPROD_API_TOKEN"
-      #     post_if_changed "prod" "$PROD_API_URL" "PROD_API_TOKEN"
+          post_if_changed "dev" "$DEV_API_URL" "DEV_API_TOKEN"
+          post_if_changed "preprod" "$PREPROD_API_URL" "PREPROD_API_TOKEN"
+          post_if_changed "prod" "$PROD_API_URL" "PROD_API_TOKEN"
