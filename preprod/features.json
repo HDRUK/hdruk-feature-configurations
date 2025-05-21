@@ -1,8 +1,5 @@
 {
     "SDEConciergeServiceEnquiry": {
-        "enabled": false
-    },
-     "tester": {
-        "enabled": false
+        "enabled": true
     }
 }
