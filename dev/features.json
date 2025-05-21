@@ -1,17 +1,6 @@
 {
     "SDEConciergeServiceEnquiry": {
         "enabled": true
-    },
-    "sundayroast": {
-        "enabled": false
-    },
-    "cakes": {
-        "enabled": true
-    },
-    "salad": {
-        "enabled" : true
-    },
-    "pies": {
-        "enabled": false
     }
+
 }
