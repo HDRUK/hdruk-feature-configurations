@@ -3,6 +3,9 @@
         "enabled": true
     },
     "sundayroast": {
+        "enabled": false
+    },
+    "cakes": {
         "enabled": true
     }
 }
