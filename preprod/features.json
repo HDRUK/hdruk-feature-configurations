@@ -1,6 +1,6 @@
 {
     "SDEConciergeServiceEnquiry": {
-        "enabled": true
+        "enabled": false
     },
     "Aliases": {
         "enabled": true
