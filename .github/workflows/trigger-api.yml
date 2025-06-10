@@ -13,12 +13,12 @@ jobs:
   deploy-and-trigger:
     runs-on: ubuntu-latest
     env:
-      DEV_API_URL: ${{ vars.DEV_API_URL }}
+      DEV_API_URL: ${{ vars.DEV_API_TOKEN }}
       PREPROD_API_URL: ${{ vars.PREPROD_API_URL }}
       PROD_API_URL: ${{ vars.PROD_API_URL }}
       DEV_API_TOKEN: ${{ secrets.DEV_TOKEN }}
-      PREPROD_API_TOKEN: ${{ secrets.PREPROD_TOKEN }}
-      PROD_API_TOKEN: ${{ secrets.PROD_TOKEN }}
+      PREPROD_API_TOKEN: ${{ secrets.PREPROD_API_TOKEN }}
+      PROD_API_TOKEN: ${{ secrets.PROD_API_TOKEN }}
       GCP_BUCKET: ${{ vars.GCP_BUCKET }}
 
     steps:
